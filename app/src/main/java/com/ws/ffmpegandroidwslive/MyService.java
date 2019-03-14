@@ -7,6 +7,7 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.ws.ffmpegandroidcameralive.WSPlayer;
 
@@ -28,15 +29,21 @@ public class MyService extends Service implements SurfaceTexture.OnFrameAvailabl
             public void onPreviewFrame(byte[] arg0, Camera arg1) {
 
                // WSPlayer.start(rotateYUVDegree90(arg0,mCamera.getParameters().getPreviewSize().width,mCamera.getParameters().getPreviewSize().height));
+                Log.v("MyService","onPreviewFrame");
                 WSPlayer.start(arg0);
             }
         };
         //WSPlayer.initialize(mCamera.getParameters().getPreviewSize().height,mCamera.getParameters().getPreviewSize().width,"rtmp://59.110.46.27:1935/srstest/teststream");
-        WSPlayer.initialize(mCamera.getParameters().getPreviewSize().width,mCamera.getParameters().getPreviewSize().height,"rtmp://59.110.46.27:1935/srstest/teststream");
         if(surfaceTexture==null)
             surfaceTexture = new SurfaceTexture(0);
         surfaceTexture.setOnFrameAvailableListener(null);
+        Log.v("MyService","open camera");
         openCamera();
+        Log.v("MyService","end open camera");
+        int x =mCamera.getParameters().getPreviewSize().height;
+        int y =mCamera.getParameters().getPreviewSize().width;
+        WSPlayer.initialize(y,x,"rtmp://59.110.46.27:1935/srstest/teststream");
+        mCamera.setPreviewCallback(mPreviewCallback);
     }
     //initial camera
     public boolean openCamera() {
